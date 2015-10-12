@@ -1,0 +1,160 @@
+@import url(https://fonts.googleapis.com/css?family=Oswald);
+
+body {
+	background-color: green;
+	font-family: 'Oswald', sans-serif;
+}
+
+.row {
+	display: block;
+	margin: 0;
+}
+
+.element-wrapper {
+	display: block;
+	width: 100%;
+	height: 100%;
+	border: 3px solid black;
+	background-color: green;
+}
+
+.element {
+	width: 100%;
+	background-color: white;
+	overflow: hidden;
+	height: 100%;
+}
+
+.event-overview > div {
+	overflow-y: scroll;
+}
+
+.event-overview > div::-webkit-scrollbar { width: 0 !important }
+
+.header {
+	width: 100%;
+	font-size: 4vw;
+}
+
+.timer {
+	font-size: 1vw;
+	width: 100%;
+}
+
+.w {
+	display: inline-block;
+	float: left;
+    margin: 0;
+}
+
+.cw {
+	text-align: center;
+    color: white;
+}
+
+.w * {
+	padding: 10px;
+	margin: 2px;
+}
+
+.third {
+	width: 33.33%;
+    width: calc(100% / 3);
+}
+
+.ninth {
+	width: 11.11%;
+    width: calc(100% / 9);
+}
+
+.almost-half {
+	width: 44.44%;
+	width: calc(100% * (4/9));
+}
+
+.full {
+	width: 100%;
+}
+
+.score {
+	background-color: gray;
+}
+
+.info {
+	background-color: gray;
+	margin-bottom: 4px;
+}
+
+.team-a:nth-of-type(even) {
+	background-color: #B37373;
+}
+
+.team-a:nth-of-type(odd) {
+	background-color: #6B4545;
+}
+
+.team-b:nth-of-type(even) {
+	background-color: #94A3BA;
+}
+
+.team-b:nth-of-type(odd) {
+	background-color: #768295;
+}
+
+.header .team-a {
+	background-color: #801515;
+}
+
+.header .team-b {
+	background-color: #4C668C;
+}
+
+.timestamp {
+	background-color: gray;
+	text-align: center;
+	margin-bottom: 4px;
+}
+
+.events {
+	font-size: 2vw;
+	height: 1%;
+	background-color: white;
+	margin-top: 4px;
+}
+
+.time {
+	background-color: green;
+	padding-left: 0;
+	padding-right: 0;
+	text-align: center;
+}
+
+@media (min-width: 768px) {
+	.main {
+		display: flex; 
+		justify-content: space-between;
+	}
+
+	.element-wrapper {
+		margin: 3px;
+	}
+}
+
+@media (max-width: 767px) {
+
+	.element-wrapper {
+		margin-bottom: 3px;
+	}
+
+	.header {
+		font-size: 7vw;
+	}
+
+	.timer {
+		font-size: 2.5vw;
+	}
+
+	.events {
+		font-size: 4.5vw;
+	}
+}

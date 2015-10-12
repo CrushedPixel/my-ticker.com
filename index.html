@@ -1,0 +1,211 @@
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<link rel="stylesheet" href="style.css">
+		<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+	</head>
+	<body>
+		<div class="main">
+			<div class="element-wrapper">
+				<div class="element event-overview">
+					<div class="header">
+						<div class="row">
+							<div class="w third">
+								<div class="cw team-name team-a">
+									Team A
+								</div>
+							</div>
+							<div class="w ninth">
+								<div class="cw score">
+									3
+								</div>
+							</div>
+							<div class="w ninth">
+								<div class="cw score separator">
+									-
+								</div>
+							</div>
+							<div class="w ninth">
+								<div class="cw score">
+									2
+								</div>
+							</div>
+							<div class="w third">
+								<div class="cw team-name team-b">
+									Team B
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="events">
+						<div class="row">
+							<div class="w almost-half">
+								<div class="info team-a">
+									info
+								</div>
+							</div>
+							<div class="w ninth timeline">
+								<div class="timestamp">
+									0'
+								</div>
+								<div class="timestamp">
+									15'
+								</div>
+								<div class="timestamp">
+									30'
+								</div>
+								<div class="timestamp">
+									45'
+								</div>
+								<div class="timestamp">
+									60'
+								</div>
+								<div class="timestamp">
+									75'
+								</div>
+								<div class="timestamp">
+									90'
+								</div>
+							</div>
+							<div class="w almost-half">
+								<div class="info team-b">
+									info
+								</div>
+								<div class="info team-b">
+									info
+								</div>
+								<div class="info team-b">
+									info
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="timer">
+						<div class="row">
+							<div class="w third">
+								<div class="info">
+									<a href="http://bit.ly/DonorCP">Donate</a>
+								</div>
+							</div>
+							<div class="w third">
+								<div class="cw time">
+									<b>90'</b>+1
+								</div>
+							</div>
+							<div class="w third">
+								<div class="info">
+									&copy; 2015 Marius Metzger
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="element-wrapper">
+				<div class="element event-overview">
+					<div class="header">
+						<div class="row">
+							<div class="w third">
+								<div class="cw team-name team-a">
+									Team A
+								</div>
+							</div>
+							<div class="w ninth">
+								<div class="cw score">
+									3
+								</div>
+							</div>
+							<div class="w ninth">
+								<div class="cw score separator">
+									-
+								</div>
+							</div>
+							<div class="w ninth">
+								<div class="cw score">
+									2
+								</div>
+							</div>
+							<div class="w third">
+								<div class="cw team-name team-b">
+									Team B
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="events">
+						<div class="row">
+							<div class="w almost-half">
+								<div class="info team-a">
+									info
+								</div>
+							</div>
+							<div class="w ninth timeline">
+								<div class="timestamp">
+									0'
+								</div>
+								<div class="timestamp">
+									15'
+								</div>
+								<div class="timestamp">
+									30'
+								</div>
+								<div class="timestamp">
+									45'
+								</div>
+								<div class="timestamp">
+									60'
+								</div>
+								<div class="timestamp">
+									75'
+								</div>
+								<div class="timestamp">
+									90'
+								</div>
+							</div>
+							<div class="w almost-half">
+								<div class="info team-b">
+									info
+								</div>
+								<div class="info team-b">
+									info
+								</div>
+								<div class="info team-b">
+									info
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="timer">
+						<div class="row">
+							<div class="w third">
+								<div class="info">
+									<a href="http://bit.ly/DonorCP">Donate</a>
+								</div>
+							</div>
+							<div class="w third">
+								<div class="cw time">
+									<b>90'</b>+1
+								</div>
+							</div>
+							<div class="w third">
+								<div class="info">
+									&copy; 2015 Marius Metzger
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
+<script>
+	function resize() {
+		$(".events").height($(".event-overview").height() - $(".header").height() - $(".timer").height() - 2);
+	}
+	
+	window.onresize = resize;
+	
+	setTimeout(resize, 1000);
+	
+</script>
