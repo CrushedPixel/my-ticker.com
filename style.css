@@ -8,6 +8,7 @@ body {
 .row {
 	display: block;
 	margin: 0;
+	width: 100%;
 }
 
 .element-wrapper {
@@ -25,11 +26,11 @@ body {
 	height: 100%;
 }
 
-.event-overview > div {
+.element > div {
 	overflow-y: scroll;
 }
 
-.event-overview > div::-webkit-scrollbar { width: 0 !important }
+.element > div::-webkit-scrollbar { width: 0 !important }
 
 .header {
 	width: 100%;
@@ -37,7 +38,7 @@ body {
 }
 
 .timer {
-	font-size: 1vw;
+	font-size: 1.5vw;
 	width: 100%;
 }
 
@@ -45,6 +46,7 @@ body {
 	display: inline-block;
 	float: left;
     margin: 0;
+    padding: 0;
 }
 
 .cw {
@@ -52,8 +54,7 @@ body {
     color: white;
 }
 
-.w * {
-	padding: 10px;
+.w > div {
 	margin: 2px;
 }
 
@@ -65,6 +66,10 @@ body {
 .ninth {
 	width: 11.11%;
     width: calc(100% / 9);
+}
+
+.half {
+	width: 50%;
 }
 
 .almost-half {
@@ -82,7 +87,10 @@ body {
 
 .info {
 	background-color: gray;
-	margin-bottom: 4px;
+}
+
+.new-submit {
+	background-color: green;
 }
 
 .team-a:nth-of-type(even) {
@@ -101,32 +109,116 @@ body {
 	background-color: #768295;
 }
 
-.header .team-a {
+.team-name-a {
 	background-color: #801515;
 }
 
-.header .team-b {
+.team-name-b {
 	background-color: #4C668C;
 }
 
 .timestamp {
 	background-color: gray;
 	text-align: center;
-	margin-bottom: 4px;
 }
 
 .events {
 	font-size: 2vw;
 	height: 1%;
 	background-color: white;
-	margin-top: 4px;
+}
+
+.new-info-input {
+	height: 1%;
+	background-color: white;
 }
 
 .time {
 	background-color: green;
-	padding-left: 0;
-	padding-right: 0;
 	text-align: center;
+}
+
+.new-event * {
+	font-size: 3vw;
+	font-family: 'Oswald', sans-serif;
+}
+
+input[type="text"] {
+	display: block;
+	margin: 0;
+	width: 100%;
+	padding: 5px;
+	appearance: none;
+	box-shadow: none;
+	border-radius: none;
+
+	font-size: 3vw;
+	font-family: 'Oswald', sans-serif;
+
+	border: solid 5px #c9c9c9;
+	transition: border 0.3s;
+}
+
+input[type="text"]:focus {
+	outline: none;
+}
+
+input[type="text"]:focus,
+input[type="text"].focus {
+  border: solid 5px #969696;
+}
+
+button {
+	width: 100%;
+	padding: 5px;
+	margin: 0;
+    color: #000;
+    background: white;
+    border-radius: 0px;
+    border: solid 5px #c9c9c9;
+    font-size: 3vw;
+	font-family: 'Oswald', sans-serif;
+}
+
+.duration-input select {
+	display: block;
+	margin: 0;
+	width: 100%;
+	padding: 5px;
+	
+	font-size: 3vw;
+	font-family: 'Oswald', sans-serif;
+
+	border: solid 5px #c9c9c9;
+	border-radius: 0;
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+.duration-input select:focus {
+	outline: none;
+}
+
+.players {
+	padding: 0;
+}
+
+.players > * {
+	margin-bottom: 4px;
+}
+
+.add-player {
+	padding: 0;
+	font-size: 2vw;
+	color: white;
+}
+
+#add-player-a {
+	background-color: #B37373;
+}
+
+#add-player-b {
+	background-color: #94A3BA;
 }
 
 @media (min-width: 768px) {
@@ -151,7 +243,7 @@ body {
 	}
 
 	.timer {
-		font-size: 2.5vw;
+		font-size: 3vw;
 	}
 
 	.events {

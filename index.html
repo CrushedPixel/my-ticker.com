@@ -3,6 +3,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 		<link rel="stylesheet" href="style.css">
 		<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="script.js"></script>
 	</head>
 	<body>
 		<div class="main">
@@ -11,7 +12,7 @@
 					<div class="header">
 						<div class="row">
 							<div class="w third">
-								<div class="cw team-name team-a">
+								<div class="cw team-name-a">
 									Team A
 								</div>
 							</div>
@@ -31,7 +32,7 @@
 								</div>
 							</div>
 							<div class="w third">
-								<div class="cw team-name team-b">
+								<div class="cw team-name-b">
 									Team B
 								</div>
 							</div>
@@ -102,94 +103,74 @@
 				</div>
 			</div>
 			<div class="element-wrapper">
-				<div class="element event-overview">
-					<div class="header">
+				<div class="element new-event">
+					<div class="new-info-input">
 						<div class="row">
 							<div class="w third">
-								<div class="cw team-name team-a">
-									Team A
-								</div>
-							</div>
-							<div class="w ninth">
-								<div class="cw score">
-									3
-								</div>
-							</div>
-							<div class="w ninth">
-								<div class="cw score separator">
-									-
-								</div>
-							</div>
-							<div class="w ninth">
-								<div class="cw score">
-									2
+								<div class="team-input">
+									<input type="text" name="team-a" value="Team A">
 								</div>
 							</div>
 							<div class="w third">
-								<div class="cw team-name team-b">
-									Team B
+								<div class="duration-input info">
+									<select>
+										<option value="45">2 * 45'</option>
+										<option value="30">2 * 30'</option>
+										<option value="15">2 * 15'</option>
+									</select>
+								</div>
+							</div>
+							<div class="w third">
+								<div class="team-input">
+									<input type="text" name="team-b" value="Team B">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="w half">
+								<div class="match-name-input">
+									<input type="text" name="match-name" placeholder="Match Name">
+								</div>
+							</div>
+							<div class="w half">
+								<div class="match-location-input">
+									<input type="text" name="match-location" placeholder="Location">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="w half">
+								<div class="players" id="players-team-a">
+									<div class="cw team-name-a" id="players-header-a">
+										Players Team A
+									</div>
+									<button class="add-player" id="add-player-a" onclick="addPlayer('a')">
+										Add Player
+									</button>
+								</div>
+							</div>
+							<div class="w half">
+								<div class="players" id="players-team-b">
+									<div class="cw team-name-b" id="players-header-b">
+										Players Team B
+									</div>
+									<button class="add-player" id="add-player-b" onclick="addPlayer('b')">
+										Add Player
+									</button>
 								</div>
 							</div>
 						</div>
 					</div>
-					<div class="events">
+					<div class="new-footer">
 						<div class="row">
-							<div class="w almost-half">
-								<div class="info team-a">
-									info
+							<div class="w half">
+								<div class="new-code-input">
+									<input type="text" name="security-code" maxlength="10">
 								</div>
 							</div>
-							<div class="w ninth timeline">
-								<div class="timestamp">
-									0'
-								</div>
-								<div class="timestamp">
-									15'
-								</div>
-								<div class="timestamp">
-									30'
-								</div>
-								<div class="timestamp">
-									45'
-								</div>
-								<div class="timestamp">
-									60'
-								</div>
-								<div class="timestamp">
-									75'
-								</div>
-								<div class="timestamp">
-									90'
-								</div>
-							</div>
-							<div class="w almost-half">
-								<div class="info team-b">
-									info
-								</div>
-								<div class="info team-b">
-									info
-								</div>
-								<div class="info team-b">
-									info
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="timer">
-						<div class="row">
-							<div class="w third">
-								<div class="info">
-									<a href="http://bit.ly/DonorCP">Donate</a>
-								</div>
-							</div>
-							<div class="w third">
-								<div class="cw time">
-									<b>90'</b>+1
-								</div>
-							</div>
-							<div class="w third">
-								<div class="info">
-									&copy; 2015 Marius Metzger
+							<div class="w half">
+								<div class="new-submit">
+									<button type="submit">Create Ticker</button>
 								</div>
 							</div>
 						</div>
@@ -199,13 +180,3 @@
 		</div>
 	</body>
 </html>
-<script>
-	function resize() {
-		$(".events").height($(".event-overview").height() - $(".header").height() - $(".timer").height() - 2);
-	}
-	
-	window.onresize = resize;
-	
-	setTimeout(resize, 1000);
-	
-</script>
