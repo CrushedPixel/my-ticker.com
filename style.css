@@ -159,13 +159,13 @@ input[type="text"] {
 	transition: border 0.3s;
 }
 
-input[type="text"]:focus {
+input:focus {
 	outline: none;
 }
 
-input[type="text"]:focus,
-input[type="text"].focus {
-  border: solid 5px #969696;
+input:not([type="number"]):focus,
+input:not([type="number"]).focus {
+	border: solid 5px #969696;
 }
 
 button {
@@ -219,6 +219,53 @@ button {
 
 #add-player-b {
 	background-color: #94A3BA;
+}
+
+.player {
+	position: relative;
+	display: block;
+	width: 100%;
+}
+
+.player:hover > .player-remove-button {display: block;}
+
+.player-name {
+	display: inline-block !important;
+	width: 75% !important;
+	padding: 5px !important;
+	font-size: 2vw !important;
+}
+
+.player-number {
+	width: 25%;
+	display: inline-block;
+	padding: 5px;
+	margin: 0;
+    color: #000;
+    background: white;
+    border-radius: 0px;
+    border: solid 5px #c9c9c9;
+    border-right: none;
+    font-size: 2vw;
+	font-family: 'Oswald', sans-serif;
+}
+
+.player-remove-button {
+	border: solid 5px #c9c9c9;
+	position: absolute;
+	right: 0;
+	top: 0;
+	background-color: DarkRed;
+	color: white;
+	font-size: 3vw;
+	padding: 5px;
+	display: none;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
 }
 
 @media (min-width: 768px) {
