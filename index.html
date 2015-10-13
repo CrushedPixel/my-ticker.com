@@ -1,39 +1,46 @@
 <html>
 	<head>
+		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 		<link rel="stylesheet" href="style.css">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 		<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 		<script type="text/javascript" src="script.js"></script>
+		<script type="text/javascript" src="combo.js"></script>
 	</head>
 	<body>
 		<div class="main">
 			<div class="element-wrapper">
+				<div class="cw element-header">
+					<div class="heading">
+						Liveticker
+					</div>
+				</div>
 				<div class="element event-overview">
 					<div class="header">
 						<div class="row">
 							<div class="w third">
-								<div class="cw team-name-a">
+								<div class="cw team-name-a border">
 									Team A
 								</div>
 							</div>
 							<div class="w ninth">
-								<div class="cw score">
+								<div class="cw score border">
 									3
 								</div>
 							</div>
 							<div class="w ninth">
-								<div class="cw score separator">
+								<div class="cw score separator border">
 									-
 								</div>
 							</div>
 							<div class="w ninth">
-								<div class="cw score">
+								<div class="cw score border">
 									2
 								</div>
 							</div>
 							<div class="w third">
-								<div class="cw team-name-b">
+								<div class="cw team-name-b border">
 									Team B
 								</div>
 							</div>
@@ -42,41 +49,41 @@
 					<div class="events">
 						<div class="row">
 							<div class="w almost-half">
-								<div class="info team-a">
+								<div class="team-a border">
 									info
 								</div>
 							</div>
 							<div class="w ninth timeline">
-								<div class="timestamp">
+								<div class="timestamp border">
 									0'
 								</div>
-								<div class="timestamp">
+								<div class="timestamp border">
 									15'
 								</div>
-								<div class="timestamp">
+								<div class="timestamp border">
 									30'
 								</div>
-								<div class="timestamp">
+								<div class="timestamp border">
 									45'
 								</div>
-								<div class="timestamp">
+								<div class="timestamp border">
 									60'
 								</div>
-								<div class="timestamp">
+								<div class="timestamp border">
 									75'
 								</div>
-								<div class="timestamp">
+								<div class="timestamp border">
 									90'
 								</div>
 							</div>
 							<div class="w almost-half">
-								<div class="info team-b">
+								<div class="team-b border">
 									info
 								</div>
-								<div class="info team-b">
+								<div class="team-b border">
 									info
 								</div>
-								<div class="info team-b">
+								<div class="team-b border">
 									info
 								</div>
 							</div>
@@ -85,17 +92,17 @@
 					<div class="timer">
 						<div class="row">
 							<div class="w third">
-								<div class="info">
+								<div class="info border">
 									<a href="http://bit.ly/DonorCP">Donate</a>
 								</div>
 							</div>
 							<div class="w third">
-								<div class="cw time">
+								<div class="cw time border">
 									<b>90'</b>+1
 								</div>
 							</div>
 							<div class="w third">
-								<div class="info">
+								<div class="info border">
 									&copy; 2015 Marius Metzger
 								</div>
 							</div>
@@ -103,18 +110,24 @@
 					</div>
 				</div>
 			</div>
+
 			<div class="element-wrapper">
+				<div class="cw element-header">
+					<div class="heading">
+						Create Ticker
+					</div>
+				</div>
 				<div class="element new-event">
 					<div class="new-info-input">
 						<div class="row">
 							<div class="w third">
 								<div class="team-input">
-									<input type="text" name="team-a" value="Team A">
+									<input class="border" type="text" name="team-a" value="Team A">
 								</div>
 							</div>
 							<div class="w third">
-								<div class="duration-input info">
-									<select>
+								<div class="duration-input">
+									<select class="border">
 										<option value="45">2 * 45'</option>
 										<option value="30">2 * 30'</option>
 										<option value="15">2 * 15'</option>
@@ -123,39 +136,39 @@
 							</div>
 							<div class="w third">
 								<div class="team-input">
-									<input type="text" name="team-b" value="Team B">
+									<input class="border" type="text" name="team-b" value="Team B">
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="w half">
 								<div class="match-name-input">
-									<input type="text" name="match-name" placeholder="Match Name">
+									<input class="border" type="text" name="match-name" placeholder="Match Name">
 								</div>
 							</div>
 							<div class="w half">
 								<div class="match-location-input">
-									<input type="text" name="match-location" placeholder="Location">
+									<input class="border" type="text" name="match-location" placeholder="Location">
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="w half">
 								<div class="players" id="players-team-a">
-									<div class="cw team-name-a" id="players-header-a">
+									<div class="cw team-name-a border" id="players-header-a">
 										Players Team A
 									</div>
-									<button class="add-player" id="add-player-a" onclick="addPlayer('a')">
+									<button class="add-player border" id="add-player-a" onclick="addPlayer('a')">
 										Add Player
 									</button>
 								</div>
 							</div>
 							<div class="w half">
 								<div class="players" id="players-team-b">
-									<div class="cw team-name-b" id="players-header-b">
+									<div class="cw team-name-b border" id="players-header-b">
 										Players Team B
 									</div>
-									<button class="add-player" id="add-player-b" onclick="addPlayer('b')">
+									<button class="add-player border" id="add-player-b" onclick="addPlayer('b')">
 										Add Player
 									</button>
 								</div>
@@ -166,14 +179,86 @@
 						<div class="row">
 							<div class="w half">
 								<div class="new-code-input">
-									<input type="text" name="security-code" maxlength="10">
+									<input class="border" type="text" name="security-code" maxlength="10" placeholder="Editing Password">
 								</div>
 							</div>
 							<div class="w half">
 								<div class="new-submit">
-									<button type="submit">Create Ticker</button>
+									<button class="border" type="submit">Create Ticker</button>
 								</div>
 							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="element-wrapper">
+				<div class="cw element-header">
+					<div class="heading">
+						Manage Ticker
+					</div>
+				</div>
+				<div class="element manage-event">
+					<div class="row">
+						<div class="w third">
+							<button class="border" id="start-button">Start First Half</button>
+						</div>
+						<div class="w third">
+							<div id="live-timer" class="cw info border">
+								00:00
+							</div>
+						</div>
+						<div class="w third">
+							<button class="border" id="stop-button">End First Half</button>
+						</div>
+					</div>
+					<div class="row of">
+						<div class="w two-ninth">
+							<select class="border">
+								<option id="team-a-option" value="team-a">Team A</option>
+								<option id="team-b-option" value="team-b">Team B</option>
+							</select>
+						</div>
+						<div class="w third">
+							<select class="border">
+								<option value="custom">Action</option>
+								<option value="yc">Yellow Card</option>
+								<option value="rc">Yellow Card</option>
+								<option value="yrc">Yellow/Red Card</option>
+								<option value="free">Free Kick</option>
+								<option value="penalty">Penalty Kick</option>
+								<option value="corner">Corner Kick</option>
+								<option value="sub">Substitution</option>
+								<option value="off">Offside</option>
+							</select>
+						</div>
+						<div class="w ninth">
+							<div class="combo">
+								<input class="border" type="number" name="player-number" id="player-number-input">
+								<ul class="border">
+									<li>1</li>
+									<li>3</li>
+									<li>5</li>
+									<li>6</li>
+									<li>7</li>
+								</ul>
+							</div>
+						</div>
+						<div class="w third">
+							<div class="combo">
+								<input class="border" type="text" name="player-name" id="player-name-input">
+								<ul class="border">
+									<li>Thomas Müller</li>
+									<li>David Beckham</li>
+									<li>Wayne Rooney</li>
+									<li>Mesut Özil</li>
+									<li>Neymar</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="w full">
+							<textarea class="border" rows="3" id="additional-info" placeholder="Additional information"></textarea>
 						</div>
 					</div>
 				</div>
