@@ -1,5 +1,5 @@
 <?php
-REQUIRE_ONCE "/php/main.php";
+REQUIRE_ONCE "../php/main.php";
 
 $id = argreq("id");
 $team = argreq("team"); //true or false

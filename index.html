@@ -1,16 +1,39 @@
 <html>
 	<head>
+		<title>MyTicker - Create your own Football Liveticker</title>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 		<link rel="stylesheet" href="style.css">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 		<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 		<script type="text/javascript" src="script.js"></script>
+		<script type="text/javascript" src="api.js"></script>
 		<script type="text/javascript" src="combo.js"></script>
 	</head>
 	<body>
 		<div class="main">
-			<div class="element-wrapper">
+			<div class="action-button">
+				<div class="button-main">
+					Liveticker
+				</div>
+				<div class="button-expansion" id="liveticker-expansion">
+					<div class="row">
+						<div class="w third">
+							<div class="info border">
+								Liveticker ID:
+							</div>
+						</div>
+						<div class="w third">
+							<input class="border" type="number" id="ticker-id-input">
+						</div>
+						<div class="w third">
+							<button class="border" onclick="loadLiveticker()">Load</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="element-wrapper" id="liveticker-wrapper">
 				<div class="cw element-header">
 					<div class="heading">
 						Liveticker
@@ -111,67 +134,61 @@
 				</div>
 			</div>
 
-			<div class="element-wrapper">
-				<div class="cw element-header">
-					<div class="heading">
-						Create Ticker
-					</div>
+			<div class="action-button" id="create-wrapper">
+				<div class="button-main">
+					Create Ticker
 				</div>
-				<div class="element new-event">
+				<div class="button-expansion new-event" id="create-expansion">
 					<div class="new-info-input">
 						<div class="row">
 							<div class="w third">
 								<div class="team-input">
-									<input class="border" type="text" name="team-a" value="Team A">
+									<input class="border" type="text" id="team-a-name" value="Team A">
 								</div>
 							</div>
 							<div class="w third">
 								<div class="duration-input">
-									<select class="border">
-										<option value="45">2 * 45'</option>
-										<option value="30">2 * 30'</option>
-										<option value="15">2 * 15'</option>
-									</select>
+									<select class="border" id="duration-select"></select>
 								</div>
 							</div>
 							<div class="w third">
 								<div class="team-input">
-									<input class="border" type="text" name="team-b" value="Team B">
+									<input class="border" type="text" id="team-b-name" value="Team B">
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="w half">
 								<div class="match-name-input">
-									<input class="border" type="text" name="match-name" placeholder="Match Name">
+									<input class="border" type="text" id="match-name" placeholder="Match Name">
 								</div>
 							</div>
 							<div class="w half">
 								<div class="match-location-input">
-									<input class="border" type="text" name="match-location" placeholder="Location">
+									<input class="border" type="text" id="match-location" placeholder="Location">
 								</div>
 							</div>
 						</div>
-						<div class="row">
-							<div class="w half">
-								<div class="players" id="players-team-a">
-									<div class="cw team-name-a border" id="players-header-a">
-										Players Team A
-									</div>
-									<button class="add-player border" id="add-player-a" onclick="addPlayer('a')">
-										Add Player
-									</button>
+					</div>
+					<div class="row">
+						<div class="w half">
+							<div class="players" id="players-team-a">
+								<div class="cw team-name-a border" id="players-header-a">
+									Players Team A
 								</div>
+								<button class="add-player border" id="add-player-a" onclick="addPlayer('a')">
+									Add Player
+								</button>
 							</div>
-							<div class="w half">
-								<div class="players" id="players-team-b">
-									<div class="cw team-name-b border" id="players-header-b">
-										Players Team B
-									</div>
-									<button class="add-player border" id="add-player-b" onclick="addPlayer('b')">
-										Add Player
-									</button>
+						</div>
+						<div class="w half">
+							<div class="players" id="players-team-b">
+								<div class="cw team-name-b border" id="players-header-b">
+									Players Team B
 								</div>
+								<button class="add-player border" id="add-player-b" onclick="addPlayer('b')">
+									Add Player
+								</button>
 							</div>
 						</div>
 					</div>
@@ -179,19 +196,20 @@
 						<div class="row">
 							<div class="w half">
 								<div class="new-code-input">
-									<input class="border" type="text" name="security-code" maxlength="10" placeholder="Editing Password">
+									<input class="border" type="text" id="security-code" maxlength="10" placeholder="Editing Password">
 								</div>
 							</div>
 							<div class="w half">
 								<div class="new-submit">
-									<button class="border" type="submit">Create Ticker</button>
+									<button class="border" onclick="createLiveticker()">Create Ticker</button>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class="element-wrapper">
+
+			<div class="element-wrapper" id="manage-wrapper">
 				<div class="cw element-header">
 					<div class="heading">
 						Manage Ticker
@@ -222,7 +240,7 @@
 							<select class="border">
 								<option value="custom">Action</option>
 								<option value="yc">Yellow Card</option>
-								<option value="rc">Yellow Card</option>
+								<option value="rc">Red Card</option>
 								<option value="yrc">Yellow/Red Card</option>
 								<option value="free">Free Kick</option>
 								<option value="penalty">Penalty Kick</option>
@@ -259,6 +277,22 @@
 					<div class="row">
 						<div class="w full">
 							<textarea class="border" rows="3" id="additional-info" placeholder="Additional information"></textarea>
+						</div>
+					</div>
+					<div class="row">
+						<div class="w third right">
+							<button class="border" id="post-event">
+								Post Event
+							</button>
+						</div>
+					</div>
+					<div class="row">
+						<div class="w full">
+							<div class="border" id="event-list">
+								<div class="event-list-entry" id="event-list-noentries">
+									No Events posted
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>

@@ -7,9 +7,10 @@ function api_done($response = null) {
     exit;
 }
 
-function api_error() {
+function api_error($error = null) {
     http_response_code(400);
-    api_done(array("success" => false));
+    if(is_null($error)) $error = array("success" => false);
+    api_done($error);
 }
 
 function argreq($name) {
@@ -17,7 +18,7 @@ function argreq($name) {
         return $_GET[$name];
     if (isset($_POST[$name]))
         return $_POST[$name];
-    api_error(param_missing($name));
+    api_error(array("message" => "Parameter missing: ".$name));
 }
 
 function argopt($name, $default) {
@@ -28,6 +29,6 @@ function argopt($name, $default) {
     return $default;
 }
 
-function password_hash($password) {
+function hash_code($password) {
     return hash('sha256', $password);
 }

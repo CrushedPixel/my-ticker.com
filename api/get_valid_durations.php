@@ -1,4 +1,4 @@
 <?php
-REQUIRE_ONCE "/php/main.php";
+REQUIRE_ONCE "../php/main.php";
 
-api_done("durations" => get_valid_durations());
+api_done(array("durations" => get_valid_durations()));

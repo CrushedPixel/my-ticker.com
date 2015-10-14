@@ -23,10 +23,10 @@ function create_ticker($team_a, $team_b, $duration, $name, $location, $players, 
 		return null;
 	}
 
-	$codehash = password_hash($code);
+	$codehash = hash_code($code);
 
 	//create ticker
-	$sql = "INSERT INTO tickers VALUES (?, ?, ?, ?, ?)";
+	$sql = 'INSERT INTO tickers (`team_a`, `team_b`, `duration`, `name`, `location`, `code`) VALUES (?, ?, ?, ?, ?, ?)';
 	$stmt = $con->prepare($sql);
 	$stmt->bindParam(1, $team_a);
 	$stmt->bindParam(2, $team_b);
@@ -36,28 +36,28 @@ function create_ticker($team_a, $team_b, $duration, $name, $location, $players, 
 	$stmt->bindParam(6, $codehash);
 	$stmt->execute();
 
-	$id = $stmt->lastInsertId();
+	$id = $con->lastInsertId();
 
 	//add players
 	if(!empty($players)) {
-		$sql = "INSERT INTO players VALUES";
+		$sql = "INSERT INTO players (`ticker`, `team`, `number`, `name`) VALUES ";
 
+		$all_values = array();
+		$i = 0;
 		foreach($players as $player) {
-			$sql .= " (?, ?, ?, ?)";
+			$sql .= "(?, ?, ?, ?)";
+			if($i < sizeof($players)-1) $sql .= ", ";
+			$i++;
+
+			$team = false;
+			if($player["team"] == "b") $team = true;
+
+			$all_values = array_merge($all_values, array($id, $team, $player["number"], $player["name"]));
 		}
 
 		$stmt = $con->prepare($sql);
 
-		$i = 0;
-		foreach($players as $player) {
-			$stmt->bindParam(4*$i + 1, $id);
-			$stmt->bindParam(4*$i + 2, $player["team"]);
-			$stmt->bindParam(4*$i + 3, $player["number"]);
-			$stmt->bindParam(4*$i + 4, $player["name"]);
-			$i++;
-		}
-
-		$stmt->execute();
+		$stmt->execute($all_values);
 	}
 
 	return $id;
@@ -146,7 +146,7 @@ function remove_ticker_event($id, $event_id, $code) {
 		return false;
 	}
 
-	$sql = "DELETE FROM events WHERE id=? AND ticker=?"
+	$sql = "DELETE FROM events WHERE id=? AND ticker=?";
 	$stmt = $con->prepare($sql);
 	$stmt->bindParam(1, $event_id);
 	$stmt->bindParam(2, $id);
@@ -184,7 +184,7 @@ function toggle_ticker_running($id, $code) {
 	$new_running = !$running;
 	$timestamp = time();
 
-	$sql = "INSERT INTO timer VALUES (?, ?, ?)"
+	$sql = "INSERT INTO timer VALUES (?, ?, ?)";
 	$stmt = $con->prepare($sql);
 	$stmt->bindParam(1, $id);
 	$stmt->bindParam(2, $timestamp);
@@ -193,13 +193,13 @@ function toggle_ticker_running($id, $code) {
 	$stmt->execute();
 
 	if(sizeof(get_timing_values($id)) >= 4) {
-		$sql = "UPDATE tickers SET finished=1 WHERE id=?"
+		$sql = "UPDATE tickers SET finished=1 WHERE id=?";
 		$stmt = $con->prepare($sql);
 		$stmt->bindParam(1, $id);
 		$stmt->execute();
 	}
 
-	$sql = "UPDATE tickers SET running=? WHERE id=?"
+	$sql = "UPDATE tickers SET running=? WHERE id=?";
 	$stmt = $con->prepare($sql);
 	$stmt->bindParam(1, $new_running);
 	$stmt->bindParam(2, $id);

@@ -23,9 +23,10 @@ function sanitize_players($players) {
 	$new_players = array();
 
 	foreach($players as $player) {
-		try {
+		try {
 			//every team may have at most 20 players to prevent database flooding
-			if($player["team"]) {
+			if(!isset($player["team"])) continue;
+			if($player["team"] == "b") {
 				$b++;
 				if($b > 20) continue;
 			} else {
@@ -35,7 +36,7 @@ function sanitize_players($players) {
 
 			//checking for valid values
 			if(!isset($player["number"]) || !isset($player["name"])
-				|| empty($player["number"]) || $player["number"] > 100 || $player["number"] < 1)
+				|| empty($player["number"]) || $player["number"] > 100 || $player["number"] < 1
 				|| empty($player["name"])) {
 				continue;
 			}
@@ -60,7 +61,7 @@ function validate_ticker_passcode($ticker, $code) {
 function check_ticker_passcode($ticker, $code) {
 	global $con;
 
-	$codehash = password_hash($code);
+	$codehash = hash_code($code);
 
 	$sql = "SELECT * FROM tickers WHERE id=? AND code=?";
 	$stmt = $con->prepare($sql);
