@@ -1,22 +1,15 @@
 <?php
 
-function api_done($response) {
+function api_done($response = null) {
     header('Content-Type: application/json');
+    if(is_null($response)) $response = array("success" => true);
     echo json_encode($response);
     exit;
 }
 
-function api_error($err) {
-    //Return other response code than 200
-    $error = array(
-        'id' => $err['id'],
-        'desc' => $err['msg'],
-        'key' => $err['key']);
-    if(array_key_exists('objects', $err)) {
-        $error['objects'] = $err['objects'];
-    }
+function api_error() {
     http_response_code(400);
-    api_done($error);
+    api_done(array("success" => false));
 }
 
 function argreq($name) {

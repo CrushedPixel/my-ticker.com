@@ -135,6 +135,7 @@ function post_ticker_event($id, $team, $action, $player_number, $player_name, $i
  * @param int id The liveticker's id.
  * @param int event_id The id of the event to remove.
  * @param string code The passcode for the liveticker.
+ * @return bool Whether the event was sucessfully removed.
  */
 function remove_ticker_event($id, $event_id, $code) {
 	global $con;
