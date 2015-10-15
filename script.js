@@ -19,6 +19,8 @@ function resize() {
 
 		list.css('margin-top', input.height() + 20);
 	});
+
+	styleOverlaysRight();
 }
 
 function applyRangeChecks() {
@@ -64,6 +66,15 @@ function toggleVisibility(id) {
 	$('#'+id).toggle();
 }
 
+function styleOverlaysRight() {
+	$('.overlay-container').each(function() {
+		var overlay = $(this).find('.overlay-right');
+		var other = $(this).children()[0];
+
+		$(overlay).css('font-size', $(other).css('font-size'));
+	});
+}
+
 function populateDurationSelect() {
 	var callback = function(data) {
 		$.each(data["durations"], function(index, value) {
@@ -71,7 +82,13 @@ function populateDurationSelect() {
 		});
 	};
 
-	get_valid_durations(callback);
+	var error_callback = function() {
+		$.each([45, 30, 15], function(index, value) {
+			$("#duration-select").append($("<option></option>").attr("value", value).text("2 * "+value+"'"));
+		});
+	}
+
+	get_valid_durations(callback, error_callback);
 }
 
 window.onresize = resize;
@@ -92,24 +109,63 @@ setTimeout(hideWrappers, timeout);
  END UI TWEAKS
 */
 
+function codeInfo() {
+	sweetAlert('The Editing Code', 'Anyone with this code can edit your Liveticker.');
+}
+
 /*
  BEGIN LIVETICKER LOAD
 */
 
 function loadLiveticker() {
-	var ticker = $("#ticker-id-input").val();
+	swal({
+		title: 'Load Liveticker',
+		html: 'Liveticker ID:<input class="visible" id="id-input" type="number">',
+		confirmButtonText: "Load",
+		showCancelButton: true,
+		closeOnConfirm: false
+	}, function() {
+		var ticker = $('#id-input').val();
+		if(ticker.length > 0) {
 
-	var loadTicker = function(data) {
-		console.log(data);
-	};
+			var loadTicker = function(data) {
+				console.log(data);
+				//TODO: Show Liveticker view
+			};
 
-	var showError = function() {
-		alert('Liveticker could not be found.');
-	};
+			var showError = function() {
+				sweetAlert('Error loading Liveticker', 'A Liveticker with ID '+ticker+' could not be found.', 'error');
+			};
 
-	if(ticker.length > 0) {
-		get_ticker(ticker, loadTicker, showError);
-	}
+			get_ticker(ticker, loadTicker, showError);
+		}
+	});
+}
+
+function manageLiveticker() {
+	swal({
+		title: 'Manage Liveticker',
+		html: 'Liveticker ID:<input class="visible" id="id-input" type="number"><br>Security Code:<input class="visible" id="code-input" type="password">',
+		confirmButtonText: "Load",
+		showCancelButton: true,
+		closeOnConfirm: false
+	}, function() {
+		var ticker = $('#id-input').val();
+		var code = $('#code-input').val();
+		if(ticker.length > 0 && code.length > 0) {
+
+			var loadTicker = function(data) {
+				console.log(data);
+				//TODO: Show Manage Liveticker view
+			};
+
+			var showError = function() {
+				sweetAlert('Error accessing Liveticker', 'Invalid Liveticker ID or Security Code provided.', 'error');
+			};
+
+			get_ticker(ticker, loadTicker, showError);
+		}
+	});
 }
 
 function createLiveticker() {
@@ -119,6 +175,24 @@ function createLiveticker() {
 	var name = $("#match-name").val();
 	var location = $("#match-location").val();
 	var code = $("#security-code").val();
+
+	//validating inputs
+	var error = null;
+
+	if(team_a.trim().length < 5 || team_b.trim().length < 5) {
+		error = 'Team names have to contain at least 5 letters.';
+	} else if(name.trim().length < 5) {
+		error = 'The match name has to contain at least 5 letters.';
+	} else if(location.trim().length < 5) {
+		error = 'The match location has to contain at least 5 letters.';
+	} else if(code.length < 5) {
+		error = 'The editing code has to be between 5 and 15 characters long.';
+	}
+
+	if(error != null) {
+		sweetAlert('Could not create Liveticker', error, 'error');
+		return;
+	}
 
 	//extract players from containers
 	var team_a_container = $('#players-team-a');
@@ -146,11 +220,11 @@ function createLiveticker() {
 	var players = JSON.stringify(player_array);
 
 	var callback = function(data) {
-		console.log(data);
+		//TODO: Hide "Create Ticker" Window and show "Manage Ticker" Window
 	};
 
 	var error_callback = function(data) {
-		console.log(data);
+		sweetAlert('Could not create Liveticker', 'An unknown error occurred while creating your Liveticker.', 'error');
 	};
 
 	create_ticker(team_a, team_b, duration, name, location, players, code, callback, error_callback);
@@ -182,16 +256,16 @@ function addPlayer(team) {
 
 	var id = last_id+1;
 
-	var div = $(document.createElement('div')).addClass('player').addClass('player-'+team).attr('id', 'player-'+team+'-'+id);
+	var div = $(document.createElement('div')).addClass('player').addClass('overlay-container').addClass('player-'+team).attr('id', 'player-'+team+'-'+id);
 
 	//TODO: Set default value to next free number
 	var number_html = '<input type="number" class="player-number border">'
 	$(number_html).appendTo(div);
 
-	var name_html = '<input type="text" class="player-name border" placeholder="Player Name">';
+	var name_html = '<input type="text" class="player-name border" placeholder="Player Name" maxlength="30">';
 	$(name_html).appendTo(div);
 
-	var remove_html = '<div class="player-remove-button border" onclick="removePlayer(\''+team+'\', '+id+')"><i class="fa fa-times"></i></div>'
+	var remove_html = '<div class="overlay-right border" onclick="removePlayer(\''+team+'\', '+id+')"><i class="fa fa-times"></i></div>'
 	$(remove_html).appendTo(div);
 
 	div.appendTo(container);

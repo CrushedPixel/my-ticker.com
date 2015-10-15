@@ -9,6 +9,8 @@
 		<script type="text/javascript" src="script.js"></script>
 		<script type="text/javascript" src="api.js"></script>
 		<script type="text/javascript" src="combo.js"></script>
+		<script src="sweetalert/sweetalert.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="sweetalert/sweetalert.css">
 	</head>
 	<body>
 		<div class="main">
@@ -18,16 +20,11 @@
 				</div>
 				<div class="button-expansion" id="liveticker-expansion">
 					<div class="row">
-						<div class="w third">
-							<div class="info border">
-								Liveticker ID:
-							</div>
+						<div class="w half">
+							<button class="button-style border" onclick="loadLiveticker()">Load Liveticker</button>
 						</div>
-						<div class="w third">
-							<input class="border" type="number" id="ticker-id-input">
-						</div>
-						<div class="w third">
-							<button class="border" onclick="loadLiveticker()">Load</button>
+						<div class="w half">
+							<button class="button-style border" onclick="manageLiveticker()">Manage Liveticker</button>
 						</div>
 					</div>
 				</div>
@@ -143,17 +140,17 @@
 						<div class="row">
 							<div class="w third">
 								<div class="team-input">
-									<input class="border" type="text" id="team-a-name" value="Team A">
+									<input class="border" type="text" id="team-a-name" placeholder="Team A" maxlength="30">
 								</div>
 							</div>
 							<div class="w third">
 								<div class="duration-input">
-									<select class="border" id="duration-select"></select>
+									<select class="select-style border" id="duration-select"></select>
 								</div>
 							</div>
 							<div class="w third">
 								<div class="team-input">
-									<input class="border" type="text" id="team-b-name" value="Team B">
+									<input class="border" type="text" id="team-b-name" placeholder="Team B" maxlength="30">
 								</div>
 							</div>
 						</div>
@@ -176,7 +173,7 @@
 								<div class="cw team-name-a border" id="players-header-a">
 									Players Team A
 								</div>
-								<button class="add-player border" id="add-player-a" onclick="addPlayer('a')">
+								<button class="button-style add-player border" id="add-player-a" onclick="addPlayer('a')">
 									Add Player
 								</button>
 							</div>
@@ -186,7 +183,7 @@
 								<div class="cw team-name-b border" id="players-header-b">
 									Players Team B
 								</div>
-								<button class="add-player border" id="add-player-b" onclick="addPlayer('b')">
+								<button class="button-style add-player border" id="add-player-b" onclick="addPlayer('b')">
 									Add Player
 								</button>
 							</div>
@@ -195,13 +192,14 @@
 					<div class="new-footer">
 						<div class="row">
 							<div class="w half">
-								<div class="new-code-input">
-									<input class="border" type="text" id="security-code" maxlength="10" placeholder="Editing Password">
+								<div class="new-code-input overlay-container">
+									<input class="border" type="password" id="security-code" maxlength="15" placeholder="Editing Code">
+									<div class="overlay-right border" onclick="codeInfo()"><i class="fa fa-question-circle"></i></div>
 								</div>
 							</div>
 							<div class="w half">
 								<div class="new-submit">
-									<button class="border" onclick="createLiveticker()">Create Ticker</button>
+									<button class="button-style border" onclick="createLiveticker()">Create Ticker</button>
 								</div>
 							</div>
 						</div>
@@ -218,7 +216,7 @@
 				<div class="element manage-event">
 					<div class="row">
 						<div class="w third">
-							<button class="border" id="start-button">Start First Half</button>
+							<button class="button-style border" id="start-button">Start First Half</button>
 						</div>
 						<div class="w third">
 							<div id="live-timer" class="cw info border">
@@ -226,18 +224,18 @@
 							</div>
 						</div>
 						<div class="w third">
-							<button class="border" id="stop-button">End First Half</button>
+							<button class="button-style border" id="stop-button">End First Half</button>
 						</div>
 					</div>
 					<div class="row of">
 						<div class="w two-ninth">
-							<select class="border">
+							<select class="select-style border">
 								<option id="team-a-option" value="team-a">Team A</option>
 								<option id="team-b-option" value="team-b">Team B</option>
 							</select>
 						</div>
 						<div class="w third">
-							<select class="border">
+							<select class="select-style border">
 								<option value="custom">Action</option>
 								<option value="yc">Yellow Card</option>
 								<option value="rc">Red Card</option>
@@ -281,7 +279,7 @@
 					</div>
 					<div class="row">
 						<div class="w third right">
-							<button class="border" id="post-event">
+							<button class="button-style border" id="post-event">
 								Post Event
 							</button>
 						</div>

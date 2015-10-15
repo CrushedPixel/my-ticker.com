@@ -178,7 +178,7 @@ body {
 	font-family: 'Oswald', sans-serif;
 }
 
-input[type="text"], input[type="number"] {
+input[type="text"], input[type="password"], input[type="number"] {
 	display: block;
 	margin: 0;
 	width: 100%;
@@ -195,7 +195,7 @@ input:focus {
 	outline: none;
 }
 
-button {
+button.button-style {
 	width: 100%;
 	padding: 5px;
 	margin: 0;
@@ -206,7 +206,7 @@ button {
 	outline: none;
 }
 
-select {
+select.select-style {
 	display: block;
 	margin: 0;
 	width: 100%;
@@ -219,7 +219,7 @@ select {
 	appearance: none;
 }
 
-select:focus {
+select.select-style:focus {
 	outline: none;
 }
 
@@ -242,12 +242,6 @@ select:focus {
 	background-color: #94A3BA;
 }
 
-.player {
-	position: relative;
-	display: block;
-	width: 100%;
-}
-
 #live-timer {
 	font-size: 3vw;
 	padding: 5px;
@@ -261,7 +255,27 @@ select:focus {
 	background-color: #B37373;
 }
 
-.player:hover > .player-remove-button {display: block;}
+.overlay-container {
+	position: relative;
+	display: block;
+	width: 100%;
+}
+
+.overlay-container:hover > .overlay-right {display: flex;}
+
+.overlay-right {
+	justify-content:center;
+	align-items:center;
+
+	position: absolute;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	background-color: DarkRed;
+	color: white;
+	padding: 5px;
+	display: none;
+}
 
 .player-name {
 	display: inline-block !important;
@@ -283,17 +297,6 @@ select:focus {
 
 .player-number {
 	border-right: none;
-}
-
-.player-remove-button {
-	position: absolute;
-	right: 0;
-	top: 0;
-	background-color: DarkRed;
-	color: white;
-	font-size: 3vw;
-	padding: 5px;
-	display: none;
 }
 
 input[type=number]::-webkit-inner-spin-button, 
@@ -367,4 +370,8 @@ textarea {
 
 button.border:active {
 	border: solid 2px #969696 !important;
+}
+
+.visible {
+	display: block !important;
 }

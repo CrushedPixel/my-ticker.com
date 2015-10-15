@@ -4,10 +4,10 @@
  no actual processing is done with the returned data.
 */
 
-function get_valid_durations(callback) {
+function get_valid_durations(callback, error_callback) {
 	$.get(
 		"/api/get_valid_durations.php"
-	).done(callback);
+	).done(callback).fail(error_callback);
 }
 
 function get_ticker(ticker_id, callback, error_callback) {
