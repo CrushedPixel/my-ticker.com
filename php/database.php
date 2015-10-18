@@ -229,12 +229,18 @@ function toggle_ticker_running($id, $code) {
 
 	global $con;
 
-	if(check_ticker_finished($id)) return null; //disallow if finished
+	if(check_ticker_finished($id)) {
+		error_log("ticker finished");
+		return null; //disallow if finished
+	}
 
 	$curtime = get_current_time($id);
 
 	if(check_ticker_running($id)) { //if ticker is running, it can only be toggled if in overtime
-		if($curtime["overtime"] == 0) return null;
+		if($curtime["overtime"] == 0) {
+			error_log("not in overtime");
+			return null;
+		}
 	}
 	
 
@@ -262,6 +268,8 @@ function toggle_ticker_running($id, $code) {
 	$stmt->bindParam(1, $new_running);
 	$stmt->bindParam(2, $id);
 	$stmt->execute();
+
+	error_log("ne running ".$new_running);
 
 	return $new_running;
 }

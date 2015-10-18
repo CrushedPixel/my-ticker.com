@@ -14,7 +14,7 @@
 	</head>
 	<body>
 		<div class="main">
-			<div class="action-button">
+			<div class="action-button" id="load-manage-button">
 				<div class="button-main">
 					Liveticker
 				</div>
@@ -37,93 +37,57 @@
 					</div>
 				</div>
 				<div class="element event-overview">
-					<div class="header">
-						<div class="row">
-							<div class="w third">
-								<div class="cw team-name-a border">
-									Team A
-								</div>
-							</div>
-							<div class="w ninth">
-								<div class="cw score border">
-									3
-								</div>
-							</div>
-							<div class="w ninth">
-								<div class="cw score separator border">
-									-
-								</div>
-							</div>
-							<div class="w ninth">
-								<div class="cw score border">
-									2
-								</div>
-							</div>
-							<div class="w third">
-								<div class="cw team-name-b border">
-									Team B
-								</div>
-							</div>
-						</div>
+					<div class="row ticker-status" id="ticker-status-not-started">
+					This event hasn't started yet.
 					</div>
-					<div class="events">
-						<div class="row">
-							<div class="w almost-half">
-								<div class="team-a border">
-									info
-								</div>
-							</div>
-							<div class="w ninth timeline">
-								<div class="timestamp border">
-									0'
-								</div>
-								<div class="timestamp border">
-									15'
-								</div>
-								<div class="timestamp border">
-									30'
-								</div>
-								<div class="timestamp border">
-									45'
-								</div>
-								<div class="timestamp border">
-									60'
-								</div>
-								<div class="timestamp border">
-									75'
-								</div>
-								<div class="timestamp border">
-									90'
-								</div>
-							</div>
-							<div class="w almost-half">
-								<div class="team-b border">
-									info
-								</div>
-								<div class="team-b border">
-									info
-								</div>
-								<div class="team-b border">
-									info
-								</div>
-							</div>
-						</div>
+					<div class="row ticker-status" id="ticker-status-finished">
+					This event is finished.
 					</div>
+					<div class="row ticker-status" id="ticker-status-pause">
+					This event is in the half time break.
+					</div>
+					<div class="row ticker-status" id="ticker-status-half-1">
+					This event is in the first half.
+					</div>
+					<div class="row ticker-status" id="ticker-status-half-1-overtime">
+					This event is in the first half's overtime.
+					</div>
+					<div class="row ticker-status" id="ticker-status-half-2">
+					This event is in the second half.
+					</div>
+					<div class="row ticker-status" id="ticker-status-half-2-overtime">
+					This event is in the second half's overtime.
+					</div>
+					<!--This div displays all information about a match-->
 					<div class="timer">
 						<div class="row">
-							<div class="w third">
-								<div class="info border">
-									<a href="http://bit.ly/DonorCP">Donate</a>
+							<div class="w full">
+								<div class="cw info live-timer border">
+									0'
 								</div>
 							</div>
-							<div class="w third">
-								<div class="cw time border">
-									<b>90'</b>+1
-								</div>
-							</div>
-							<div class="w third">
-								<div class="info border">
-									&copy; 2015 Marius Metzger
+						</div>
+					</div>
+					<div class="row event-display">
+						<div class="row score-row">
+							<div class="w third teamname-a">Team A</div>
+							<div class="w ninth score score-a">0</div>
+							<div class="w ninth score">-</div>
+							<div class="w ninth score score-b">0</div>
+							<div class="w third teamname-b">Team B</div>
+						</div>
+						<div class="w full">
+							<div class="events-table">
+								<div class="events-row noevents-row">
+									<div class="events-row-entry almost-half event noevents noevents-a">
+										No events yet.
+									</div>
+									<div class="events-row-entry ninth timestamp noevents notimestamp">
+										-
+									</div>
+									<div class="events-row-entry almost-half event noevents noevents-a">
+										No events yet.
+									</div>
 								</div>
 							</div>
 						</div>
@@ -219,7 +183,7 @@
 							<button class="button-style border" id="start-button" onclick="toggleTickerRunning()">Start First Half</button>
 						</div>
 						<div class="w third">
-							<div id="live-timer" class="cw info border">
+							<div class="cw info border live-timer">
 								0'
 							</div>
 						</div>
@@ -326,6 +290,17 @@
 								<span class="match-id">14</span>
 							</div>
 						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="footer">
+				<div class="row">
+					<div class="reset-button" onclick="resetUI()">
+						<u><i class="fa fa-repeat"></i> Reset Website</u>
+					</div>
+					<div class="w half right text-right">
+						&copy; 2015 Marius Metzger
 					</div>
 				</div>
 			</div>

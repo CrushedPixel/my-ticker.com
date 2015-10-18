@@ -15,10 +15,6 @@ function handle_errors($error, $message, $filename, $line) {
     exit;
 }
 
-function hash_password($password) {
-	
-}
-
 set_error_handler('handle_errors');
 
 $con = new PDO("mysql:host=$_db_host;dbname=$_db_database" ,$_db_username, $_db_password);

@@ -4,7 +4,7 @@
  */
 
 function get_valid_durations() {
-	return array(2, 45, 30, 15);
+	return array(45, 30, 15);
 }
 
 function validate_duration($duration) {
@@ -69,27 +69,39 @@ function check_ticker_passcode($ticker, $code) {
 	$stmt->bindParam(2, $codehash);
 	$stmt->execute();
 
-	return !empty($stmt->fetchAll());
+	while($row = $stmt->fetch()) {
+		return true;
+	}
+
+	return false;
 }
 
 function check_ticker_finished($ticker) {
 	global $con;
 
-	$sql = "SELECT * FROM tickers WHERE id=? AND finished=0";
+	$sql = "SELECT * FROM tickers WHERE id=? AND finished=1";
 	$stmt = $con->prepare($sql);
 	$stmt->bindParam(1, $ticker);
 	$stmt->execute();
 
-	return empty($stmt->fetchAll());
+	while($row = $stmt->fetch()) {
+		return true;
+	}
+
+	return false;
 }
 
 function check_ticker_running($ticker) {
 	global $con;
 
-	$sql = "SELECT * FROM tickers WHERE id=? AND running=0";
+	$sql = "SELECT * FROM tickers WHERE id=? AND running=1";
 	$stmt = $con->prepare($sql);
 	$stmt->bindParam(1, $ticker);
 	$stmt->execute();
 
-	return empty($stmt->fetchAll());
+	while($row = $stmt->fetch()) {
+		return true;
+	}
+
+	return false;
 }

@@ -9,15 +9,12 @@ TO_UPDATE = null; //either 'manage', 'load' or null
 EVENTS = [];
 
 function update() {
-	if(TO_UPDATE == 'manage') {
+	if(TO_UPDATE == 'manage' || TO_UPDATE == 'load') {
 		update_manage_ticker();
-	} else if(TO_UPDATE == 'load') {
-
 	}
 }
 
-setInterval(update, 10*1000); //update every 10s
-//TODO: have a look at data amounts
+setInterval(update, 10*1000); //update every 10s. Data usage is fine.
 
 /*
  BEGIN UI TWEAKS
@@ -142,7 +139,10 @@ function loadLiveticker() {
 		if(ticker.length > 0) {
 
 			var loadTicker = function(data) {
-				//TODO: Show Liveticker view
+				load_ticker(data);
+				TO_UPDATE = 'load';
+				MANAGE_TICKER_ID = ticker;
+				swal.closeModal();
 			};
 
 			var showError = function() {
@@ -247,6 +247,17 @@ function createLiveticker() {
 	create_ticker(team_a, team_b, duration, name, location, players, code, callback, error_callback);
 }
 
+function load_ticker(data) {
+	data = data["ticker"];
+
+	update_manage_ticker(data);
+
+	//show the UI
+	$("#load-manage-button").hide();
+	$("#create-wrapper").hide();
+	$("#liveticker-wrapper").show();
+}
+
 function manage_ticker(data) {
 	data = data["ticker"];
 
@@ -304,6 +315,7 @@ function manage_ticker(data) {
 	update_manage_ticker(data);
 
 	//show the UI
+	$("#load-manage-button").hide();
 	$("#create-wrapper").hide();
 	$("#manage-wrapper").show();
 }
@@ -322,7 +334,7 @@ function update_manage_ticker(data) {
 
 	$(".match-id").text(data["id"]);
 
-	var live_timer = $("#live-timer");
+	var live_timer = $(".live-timer");
 
 	var timer_value = ((data["duration"]*Math.max(0, data["time"]["half"]-1)) + Math.ceil(data["time"]["time"]/60)) + "'";
 	if(data["time"]["overtime"] > 0) {
@@ -509,20 +521,13 @@ function toggleTickerRunning() {
 
 function append_event_to(container, evnt) {
 
-	var number_entry = $('<div/>',
-	{
-		"class": "events-row-entry-entry",
-		"text": evnt["player_number"]
-	});
-
 	var name_entry = $('<div/>',
 	{
 		"class": "events-row-entry-entry",
-		"text": evnt["player_name"]
+		"text": evnt["player_name"]+" ("+evnt["player_number"]+")"
 	});
 
 	actionLogo(evnt["action"]).appendTo(container);
-	number_entry.appendTo(container);
 	name_entry.appendTo(container);
 
 	var info_button = $('<div/>',
@@ -538,7 +543,6 @@ function append_event_to(container, evnt) {
 function eventInfo(event_id) {
 	evnt = null;
 	$.each(EVENTS, function(index, e) {
-		console.log(e);
 		if(e["id"] == event_id) {
 			evnt = e;
 			return true;
@@ -675,4 +679,17 @@ function localizeEventType(event_type) {
 	});
 
 	return text;
+}
+
+function resetUI() {
+	hideWrappers();
+	$("#load-manage-button").show();
+	$("#create-wrapper").show();
+
+	$(".button-expansion").hide();
+
+	EVENTS = [];
+	TO_UPDATE = null;
+	MANAGE_TICKER_ID = null;
+	MANAGE_TICKER_CODE = null;
 }
