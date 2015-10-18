@@ -6,6 +6,7 @@ MANAGE_TICKER_CODE = null; //the ticker's security code
 
 TO_UPDATE = null; //either 'manage', 'load' or null
 
+EVENTS = [];
 
 function update() {
 	if(TO_UPDATE == 'manage') {
@@ -397,6 +398,8 @@ function update_manage_ticker(data) {
 	//group elements by timestamp
 	var half_duration = data["duration"];
 
+	EVENTS = data["events"];
+
 	var rows = [];
 	$.each(data["events"], function(index, element) {
 		var minute = (half_duration * Math.max(0, element["time"]["half"]-1)) + Math.ceil(element["time"]["time"]/60);
@@ -518,31 +521,44 @@ function append_event_to(container, evnt) {
 		"text": evnt["player_name"]
 	});
 
-	var action_entry = $('<div/>',
-	{
-		"class": "events-row-entry-entry",
-		"text": evnt["action"]
-	});
-
+	actionLogo(evnt["action"]).appendTo(container);
 	number_entry.appendTo(container);
 	name_entry.appendTo(container);
-	action_entry.appendTo(container);
 
-	if(evnt["info"].trim().length > 0) {
-		//TODO: Add info button with sweetAlert for details
-		var info_button = $('<div/>',
+	var info_button = $('<div/>',
 		{
 			"class": "events-row-entry-entry event-info-button",
 			"html": '<i class="fa fa-info-circle"></i>',
-			"onclick": 'eventInfo("'+evnt["info"]+'")'
+			"onclick": 'eventInfo("'+evnt["id"]+'")'
 		});
 
-		info_button.appendTo(container);
-	}
+	info_button.appendTo(container);
 }
 
-function eventInfo(info) {
-	sweetAlert("Event information", info);
+function eventInfo(event_id) {
+	evnt = null;
+	$.each(EVENTS, function(index, e) {
+		console.log(e);
+		if(e["id"] == event_id) {
+			evnt = e;
+			return true;
+		}
+	});
+
+	if(evnt != null) {
+
+		var html_code = "Event Type: "+localizeEventType(evnt["action"])+"<br>";
+		html_code += "Player: "+evnt["player_name"]+" ("+evnt["player_number"]+")";
+
+		if(evnt["info"].trim().length > 0) {
+			html_code += "<br>Info: "+evnt["info"];
+		}
+	
+		swal({
+			title: 'Event information',
+			html: html_code,
+		});
+	}
 }
 
 function postEvent() {
@@ -630,18 +646,33 @@ function removePlayer(team, id) {
 	resize();
 }
 
-/*
- END EVENT CREATION
-*/
-
-/*
- BEGIN EVENT POSTING
-*/
-
 function removeEvent(event_id) {
-
+	//Possibly TODO
 }
 
-/*
- END EVENT POSTING
-*/
+function actionLogo(action) {
+	var src = "/icon/";
+	if(action == "free" || action == "penalty" || action == "corner") {
+		src += "foul"
+	} else if(action == "yrc") {
+		src += "rc";
+	} else {
+		src += action;
+	}
+
+	src += ".png";
+
+	return $('<img>').attr('class', 'events-row-entry-entry event-img').attr('src', src);
+}
+
+function localizeEventType(event_type) {
+	var text = "";
+	$("#action-select > option").each(function() {
+		if(this.value == event_type) {
+			text = this.text;
+			return true;
+		}
+	});
+
+	return text;
+}

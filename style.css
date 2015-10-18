@@ -435,3 +435,9 @@ button:disabled {
 .text-right {
 	text-align: right;
 }
+
+.event-img {
+	width: 10%;
+	padding: 0;
+	margin: 0;
+}
