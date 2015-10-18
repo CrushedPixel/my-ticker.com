@@ -75,7 +75,24 @@ function get_ticker($id) {
 	$stmt->bindParam(1, $id);
 	$stmt->execute();
 
-	return $stmt->fetch();
+	if($row = $stmt->fetch()) {
+		return array(
+			"duration" => $row["duration"],
+			"finished" => $row["finished"],
+			"id" => $row["id"],
+			"location" => $row["location"],
+			"name" => $row["name"],
+			"running" => $row["running"],
+			"team_a" => $row["team_a"],
+			"team_b" => $row["team_b"],
+			"players" => get_ticker_players($id),
+			"time" => get_current_time($id),
+			"events" => get_ticker_events($id),
+			"goals" => get_goal_count($id)
+		);
+	}
+
+	return null;
 }
 
 /**
@@ -90,13 +107,23 @@ function get_ticker_players($id) {
 	$stmt->bindParam(1, $id);
 	$stmt->execute();
 
-	return $stmt->fetchAll();
+	$arr = array();
+
+	while($row = $stmt->fetch()) {
+		$arr[] = array(
+			"name" => $row["name"],
+			"number" => $row["number"],
+			"team" => $row["team"],
+		);
+	}
+
+	return $arr;
 }
 
 /**
  * Posts a new event to a liveticker.
  * @param int id The liveticker's id.
- * @param bool team The team associated with the event. false for home, true for guest.
+ * @param int team The team associated with the event. 0 for home, 1 for guest.
  * @param string action The event's action type. May be null for no specific action.
  * @param int player_number The number of the player associated with this event.
  * @param string player_name The name of the player associated with this event.
@@ -115,7 +142,7 @@ function post_ticker_event($id, $team, $action, $player_number, $player_name, $i
 
 	$timestamp = time();
 
-	$sql = "INSERT INTO events VALUES (?, ?, ?, ?, ?, ?)";
+	$sql = "INSERT INTO events (`ticker`, `timestamp`, `team`, `action`, `player_number`, `player_name`, `info`) VALUES (?, ?, ?, ?, ?, ?, ?)";
 	$stmt = $con->prepare($sql);
 	$stmt->bindParam(1, $id);
 	$stmt->bindParam(2, $timestamp);
@@ -167,7 +194,21 @@ function get_ticker_events($id) {
 	$stmt->bindParam(1, $id);
 	$stmt->execute();
 
-	return $stmt->fetchAll();
+	$arr = array();
+
+	while($row = $stmt->fetch()) {
+		$arr[] = array(
+			"id" => $row["id"],
+			"time" => get_current_time($id, $row["timestamp"]),
+			"team" => $row["team"],
+			"action" => $row["action"],
+			"player_number" => $row["player_number"],
+			"player_name" => $row["player_name"],
+			"info" => $row["info"]
+		);
+	}
+
+	return $arr;
 }
 
 /**
@@ -176,9 +217,26 @@ function get_ticker_events($id) {
  * @return bool Whether or not the ticker is running after the toggle, or null if toggling failed.
  */
 function toggle_ticker_running($id, $code) {
+	//this is only possible under the following circumstances:
+	//
+	//1. The current event hasn't started yet. In this case, the first half will be started.
+	//
+	//2. The current event is in overtime (either first or second half). in this case,
+	//	 the event is going to be stopped. If it's in the second half's overtime, the
+	//	 event is going to be marked as finished. TODO: if tie, ask for match extension
+	//
+	//3. the current event is in the half time break. In this case, the second half will be started.
+
 	global $con;
 
-	if(check_ticker_finished($id)) return null;
+	if(check_ticker_finished($id)) return null; //disallow if finished
+
+	$curtime = get_current_time($id);
+
+	if(check_ticker_running($id)) { //if ticker is running, it can only be toggled if in overtime
+		if($curtime["overtime"] == 0) return null;
+	}
+	
 
 	$running = check_ticker_running($id);
 	$new_running = !$running;
@@ -225,21 +283,28 @@ function get_timing_values($id) {
  *               the half's time in seconds (max. half length),
  *               the current overtime in seconds
  */
-function get_current_time($id) {
-	$ticker = get_ticker($id);
-	if(is_null($ticker)) return null;
+function get_current_time($id, $timestamp = -1) {
+	global $con;
+
+	$sql = "SELECT * FROM tickers WHERE id=?";
+	$stmt = $con->prepare($sql);
+	$stmt->bindParam(1, $id);
+	$stmt->execute();
+
+	if(!($ticker = $stmt->fetch())) return null;
 
 	$half_duration = 60*$ticker["duration"];
 
 	$timing = get_timing_values($id);
 
-	$timestamp = time();
+	if($timestamp == -1) $timestamp = time();
 
 	$half = 0;
 	$time = 0;
 	$overtime = 0;
 
 	foreach($timing as $row) {
+		if($row["timestamp"] > $timestamp) break;
 		if($row["started"]) {
 			$half++;
 			$time = $timestamp - $row["timestamp"];
@@ -253,5 +318,21 @@ function get_current_time($id) {
 		$time = $half_duration;
 	}
 
-	return array($half, $time, $overtime);
+	return array("half" => $half, "time" => $time, "overtime" => $overtime);
+}
+
+function get_goal_count($id) {
+	$a = 0;
+	$b = 0;
+
+	$events = get_ticker_events($id);
+
+	foreach($events as $event) {
+		if($event["action"] == "goal") {
+			if($event["team"] == 0) $a++;
+			else $b++;
+		}
+	}
+
+	return array("team_a" => $a, "team_b" => $b);
 }

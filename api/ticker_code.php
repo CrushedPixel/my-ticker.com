@@ -2,6 +2,9 @@
 REQUIRE_ONCE "../php/main.php";
 
 $id = argreq("id");
-$code = argreq("code")
+$code = argreq("code");
 
-api_done(array("valid" => check_ticker_passcode($id, $code)));
+if(check_ticker_passcode($id, $code)) {
+	api_done(array("ticker" => get_ticker($id)));
+}
+api_error();

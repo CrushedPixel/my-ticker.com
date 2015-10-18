@@ -17,4 +17,4 @@ if(is_null($id)) {
 	api_error();
 }
 
-api_done(get_ticker($id));
+api_done(array("ticker" => get_ticker($id)));

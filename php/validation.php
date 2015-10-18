@@ -4,7 +4,7 @@
  */
 
 function get_valid_durations() {
-	return array(45, 30, 15);
+	return array(2, 45, 30, 15);
 }
 
 function validate_duration($duration) {

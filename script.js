@@ -1,23 +1,35 @@
 /*
+ GLOBAL VARIABLES
+*/
+MANAGE_TICKER_ID = null; //the ticker that is currently being managed
+MANAGE_TICKER_CODE = null; //the ticker's security code
+
+TO_UPDATE = null; //either 'manage', 'load' or null
+
+
+function update() {
+	if(TO_UPDATE == 'manage') {
+		update_manage_ticker();
+	} else if(TO_UPDATE == 'load') {
+
+	}
+}
+
+setInterval(update, 10*1000); //update every 10s
+//TODO: have a look at data amounts
+
+/*
  BEGIN UI TWEAKS
 */
 
 function resize() {
-	$(".element-wrapper").each(function(index) {
-		var header = $(".element-wrapper").find(".element-header");
-		var element = $(".element-wrapper").find(".element");
-
-		element.height($(this).height() - header.height());
-	});
-
-	$(".events").height($(".event-overview").height() - $(".header").height() - $(".timer").height());
 	$(".new-info-input").height($(".new-event").height() - $(".new-footer").height());
 
 	$(".combo").each(function() {
 		var input = $(this).find("input");
 		var list = $(this).find("ul");
 
-		list.css('margin-top', input.height() + 20);
+		list.css('margin-top', input.height() + 14);
 	});
 
 	styleOverlaysRight();
@@ -46,7 +58,7 @@ function applyComboJS() {
 
 function hideWrappers() {
 	$(".element-wrapper").each(function() {
-		$(this).hide().css("visibility", "hidden");
+		$(this).hide();
 	});
 }
 
@@ -129,7 +141,6 @@ function loadLiveticker() {
 		if(ticker.length > 0) {
 
 			var loadTicker = function(data) {
-				console.log(data);
 				//TODO: Show Liveticker view
 			};
 
@@ -155,15 +166,18 @@ function manageLiveticker() {
 		if(ticker.length > 0 && code.length > 0) {
 
 			var loadTicker = function(data) {
-				console.log(data);
-				//TODO: Show Manage Liveticker view
+				manage_ticker(data);
+				TO_UPDATE = 'manage';
+				MANAGE_TICKER_ID = ticker;
+				MANAGE_TICKER_CODE = code;
+				swal.closeModal();
 			};
 
 			var showError = function() {
 				sweetAlert('Error accessing Liveticker', 'Invalid Liveticker ID or Security Code provided.', 'error');
 			};
 
-			get_ticker(ticker, loadTicker, showError);
+			ticker_code(ticker, code, loadTicker, showError);
 		}
 	});
 }
@@ -220,7 +234,9 @@ function createLiveticker() {
 	var players = JSON.stringify(player_array);
 
 	var callback = function(data) {
-		//TODO: Hide "Create Ticker" Window and show "Manage Ticker" Window
+		MANAGE_TICKER_ID = data["ticker"]["id"];
+		MANAGE_TICKER_CODE = code;
+		manage_ticker(data);
 	};
 
 	var error_callback = function(data) {
@@ -230,13 +246,348 @@ function createLiveticker() {
 	create_ticker(team_a, team_b, duration, name, location, players, code, callback, error_callback);
 }
 
-/*
- END LIVETICKER LOAD
-*/
+function manage_ticker(data) {
+	data = data["ticker"];
 
-/*
- BEGIN EVENT CREATION
-*/
+	//populate UI
+	$("#team-a-option").html(data["team_a"]);
+	$("#team-b-option").html(data["team_b"]);
+
+	var number_values = $("#player-number-values");
+	var name_values = $("#player-name-values");
+
+	var name_input = $("#player-name-input");
+	var number_input = $("#player-number-input");
+
+	$("#team-select").change(function() {
+		number_values.empty();
+		name_values.empty();
+
+		name_input.val('');
+		number_input.val('');
+
+		var value = this.value;
+
+		$.each(data["players"], function() {
+			if((value == "team-a" && this["team"] == 0) || (value == "team-b" && this["team"] == 1)) {
+				var thenum = this["number"];
+				var thename = this["name"];
+
+				var num = $("<li>"+thenum+"</li>");
+				var name = $("<li>"+thename+"</li>");
+
+				num.click(function() {
+					name_input.val(thename);
+				});
+
+				name.click(function() {
+					number_input.val(thenum);
+				});
+
+				number_values.append(num);
+				name_values.append(name);
+			}
+		});
+
+		applyComboJS();
+	});
+
+	$("#team-select").change();
+
+	//show/hide the post-event div depending on whether the ticker running or not
+	var post_event_div = $("#event-post-div");
+
+	if(data["running"] == 0) post_event_div.hide();
+	else post_event_div.show();
+
+	update_manage_ticker(data);
+
+	//show the UI
+	$("#create-wrapper").hide();
+	$("#manage-wrapper").show();
+}
+
+function unknown_error() {
+	sweetAlert('An unknown error occurred.', 'Please try again after refreshing the page.', 'error');
+}
+
+function update_manage_ticker(data) {
+	if(data === undefined) {
+		get_ticker(MANAGE_TICKER_ID, function(data) {
+				update_manage_ticker(data["ticker"]);
+		}, function() { unknown_error(); });
+		return;
+	}
+
+	$(".match-id").text(data["id"]);
+
+	var live_timer = $("#live-timer");
+
+	var timer_value = ((data["duration"]*Math.max(0, data["time"]["half"]-1)) + Math.ceil(data["time"]["time"]/60)) + "'";
+	if(data["time"]["overtime"] > 0) {
+		timer_value += "+"+Math.ceil(data["time"]["overtime"]/60);
+	}
+
+	live_timer.text(timer_value);
+
+	var post_event_div = $("#event-post-div");
+
+	//the ticker status
+	$(".ticker-status").each(function() {
+		$(this).hide();
+	});
+
+	var start_button = $("#start-button");
+	var stop_button = $("#stop-button");
+
+	start_button.html("Start First Half");
+	stop_button.html("End First Half");
+
+	start_button.prop('disabled', true);
+	stop_button.prop('disabled', true);
+
+	//very confusing if/else statements that show the correct event status div and enable the correct buttons
+	if(data["time"]["half"] == 0) {
+		$("#ticker-status-not-started").show();
+		start_button.html("Start First Half");
+		start_button.prop('disabled', false);
+	} else {
+		if(data["finished"] == 0) {
+			if(data["running"] == 0) {
+				$("#ticker-status-pause").show();
+				start_button.html("Start Second Half");
+				start_button.prop('disabled', false);
+			} else {
+				if(data["time"]["half"] == 1) {
+					stop_button.html("End First Half"); 
+
+					if(data["time"]["overtime"] == 0) {
+						$("#ticker-status-half-1").show();
+					} else {
+						$("#ticker-status-half-1-overtime").show();
+						stop_button.prop('disabled', false); //the half can only be stopped after it's finished
+					}
+				} else if(data["time"]["half"] == 2) {
+					stop_button.html("End Second Half");
+
+					if(data["time"]["overtime"] == 0) {
+						$("#ticker-status-half-2").show();
+					} else {
+						$("#ticker-status-half-2-overtime").show();
+						stop_button.prop('disabled', false); //the half can only be stopped after it's finished
+					}
+				}
+			}
+		} else {
+			$("#ticker-status-finished").show();
+		}
+	}
+
+	//setting the goal count
+	$(".score-a").text(data["goals"]["team_a"]);
+	$(".score-b").text(data["goals"]["team_b"]);
+
+	//populating the events list
+	//first, reset it
+	$(".noevents-row").show();
+	$(".events-table").children(":not(.noevents-row)").each(function() {
+		$(this).remove();
+	});
+
+	//group elements by timestamp
+	var half_duration = data["duration"];
+
+	var rows = [];
+	$.each(data["events"], function(index, element) {
+		var minute = (half_duration * Math.max(0, element["time"]["half"]-1)) + Math.ceil(element["time"]["time"]/60);
+		var overtime = Math.ceil(element["time"]["overtime"]/60);
+
+		var found = false;
+		$.each(rows, function(index, row) {
+			if(row["min"] == minute && row["ot"] == overtime) {
+				row["events"].push(element)
+				found = true;
+			}
+		});
+
+		if(!found) {
+			rows.push(
+			{
+				"min": minute,
+				"ot": overtime,
+				"events": [element]
+			});
+		}
+	});
+
+
+	$.each(rows, function(index, row) {
+		$(".noevents-row").hide();
+
+		var a_events = [];
+		var b_events = [];
+
+		$.each(row["events"], function(index, evnt) {
+			if(evnt["team"] == 0) a_events.push(evnt);
+			else b_events.push(evnt);
+		});
+
+		var row_count = Math.max(a_events.length, b_events.length);
+
+		var i;
+		for(i = 0; i < row_count; i++) {
+			var events_row = $('<div/>',
+			{
+				"class": "events-row"
+			});
+
+			var a_event = $('<div/>',
+			{
+				"class": "events-row-entry almost-half event"
+			});
+
+			var b_event = $('<div/>',
+			{
+				"class": "events-row-entry almost-half event"
+			});
+
+			if(i < a_events.length) {
+				append_event_to(a_event, a_events[i]);
+			} else {
+				a_event.html("&nbsp;")
+			}
+
+			if(i < b_events.length) {
+				append_event_to(b_event, b_events[i]);
+			} else {
+				b_event.html("&nbsp;")
+			}
+
+			var timetext = "&nbsp;";
+
+			if(i == 0) {
+				timetext = row["min"]+"'";
+				if(row["ot"] > 0) timetext += "+"+row["ot"];
+			}
+
+			var time = $('<div/>',
+			{
+				"class": "events-row-entry ninth timestamp",
+				"html": timetext
+			});
+
+			a_event.appendTo(events_row);
+			time.appendTo(events_row);
+			b_event.appendTo(events_row);
+
+			events_row.appendTo($(".events-table"));
+		}
+
+	});
+}
+
+function toggleTickerRunning() {
+	var post_event_div = $("#event-post-div");
+
+	var callback = function(sub_data) {
+		if(sub_data["running"]) post_event_div.show();
+		else post_event_div.hide();
+		update_manage_ticker();
+	};
+
+	var error_callback = function() {
+		unknown_error();
+		update_manage_ticker();
+	};
+
+	toggle_running(MANAGE_TICKER_ID, MANAGE_TICKER_CODE, callback, error_callback);
+}
+
+
+function append_event_to(container, evnt) {
+
+	var number_entry = $('<div/>',
+	{
+		"class": "events-row-entry-entry",
+		"text": evnt["player_number"]
+	});
+
+	var name_entry = $('<div/>',
+	{
+		"class": "events-row-entry-entry",
+		"text": evnt["player_name"]
+	});
+
+	var action_entry = $('<div/>',
+	{
+		"class": "events-row-entry-entry",
+		"text": evnt["action"]
+	});
+
+	number_entry.appendTo(container);
+	name_entry.appendTo(container);
+	action_entry.appendTo(container);
+
+	if(evnt["info"].trim().length > 0) {
+		//TODO: Add info button with sweetAlert for details
+		var info_button = $('<div/>',
+		{
+			"class": "events-row-entry-entry event-info-button",
+			"html": '<i class="fa fa-info-circle"></i>',
+			"onclick": 'eventInfo("'+evnt["info"]+'")'
+		});
+
+		info_button.appendTo(container);
+	}
+}
+
+function eventInfo(info) {
+	sweetAlert("Event information", info);
+}
+
+function postEvent() {
+	var team_letter = $("#team-select").val().split("-")[1];
+	var player_number = $("#player-number-input").val();
+	var player_name = $("#player-name-input").val();
+	var action = $("#action-select").val();
+	var info = $("#additional-info").val();
+
+	//validating inputs
+	var error = null;
+
+	if(player_number.trim().length < 1) {
+		error = 'The Player Number may not be empty';
+	} else if(player_name.trim().length < 1 || player_name.trim().length > 30) {
+		error = 'The Player Name may not be empty';
+	}
+
+	if(error != null) {
+		sweetAlert('Could not post Event', error, 'error');
+		return;
+	}
+
+	var callback = function(data) {
+		update_manage_ticker(data["ticker"]);
+		clearEventInputs();
+	};
+
+	var error_callback = function(data) {
+		unknown_error();
+	};
+
+	var team = 0;
+	if(team_letter == "b") team = 1;
+
+	post_event(MANAGE_TICKER_ID, MANAGE_TICKER_CODE, team, action, player_number, player_name, info, callback, error_callback);
+}
+
+function clearEventInputs() {
+	$("#team-select")[0].selectedIndex = 0;
+	$("#action-select")[0].selectedIndex = 0;
+	$("#player-number-input").val('');
+	$("#player-name-input").val('');
+	$("#additional-info").val('');
+}
 
 //adds a new player to one of the teams. team is either 'a' or 'b'.
 function addPlayer(team) {
@@ -286,12 +637,6 @@ function removePlayer(team, id) {
 /*
  BEGIN EVENT POSTING
 */
-
-//TODO: actual Database interaction, possibly fetch events from server again after every post/remove
-function postEvent(team, action, player_number, player_name, info) {
-	var container = $('#event-list');
-
-}
 
 function removeEvent(event_id) {
 

@@ -33,10 +33,15 @@ body {
 	cursor: hand;
 }
 
+.ticker-status {
+	text-align: center;
+	font-size: 5vw;
+	background-color: #CEECF5;
+}
+
 .element-wrapper {
 	display: block;
 	width: 100%;
-	height: 100%;
 	border: 3px solid black;
 	background-color: green;
 	margin: 3px;
@@ -49,16 +54,9 @@ body {
 
 .element {
 	width: 100%;
-	height: 1%;
 	background-color: white;
 	overflow: hidden;
 }
-
-.element > div {
-	overflow-y: scroll;
-}
-
-.element > div::-webkit-scrollbar { width: 0 !important }
 
 .header {
 	width: 100%;
@@ -94,6 +92,10 @@ body {
 .two-ninth {
 	width: 22.22%;
 	width: calc(100% * (2/9));
+}
+
+.five-ninth {
+	width: calc(100% * (5/9));
 }
 
 .ninth {
@@ -155,6 +157,7 @@ body {
 .timestamp {
 	background-color: gray;
 	text-align: center;
+	height: 100%;
 }
 
 .events {
@@ -322,7 +325,7 @@ input[type=number]::-webkit-outer-spin-button {
 	margin-top: 0;
 	background-color: #cfc;
 	position: absolute;
-	border: solid 5px #969696 !important;
+	border: solid 2px #c9c9c9;
 	left: 0;
 	right: 0;
 	top: 0;
@@ -372,6 +375,63 @@ button.border:active {
 	border: solid 2px #969696 !important;
 }
 
+button:disabled {
+	color: DarkGray;
+}
+
 .visible {
 	display: block !important;
+}
+
+.score-row {
+	font-size: 5vw;
+	text-align: center;
+}
+
+.score-a {
+	text-align: right;
+}
+
+.score-b {
+	text-align: left;
+}
+
+.events-table {
+	display: table;
+	table-layout: fixed;
+	font-size: 4vw;
+	text-align: center;
+	width: 100%;
+}
+
+.events-row {
+	display: table-row;
+	width: 100%;
+	float: left;
+	font-size: 3vw;
+}
+
+.events-row-entry {
+	display: flex;
+	flex-wrap: wrap;
+
+	justify-content: center;
+	align-items: center;
+
+	float: left;
+	height: 100%;
+	border-top: 1px white solid;
+}
+
+.events-row-entry-entry {
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+.event-display {
+	background-color: lightgreen;
+}
+
+.text-right {
+	text-align: right;
 }

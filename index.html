@@ -216,80 +216,114 @@
 				<div class="element manage-event">
 					<div class="row">
 						<div class="w third">
-							<button class="button-style border" id="start-button">Start First Half</button>
+							<button class="button-style border" id="start-button" onclick="toggleTickerRunning()">Start First Half</button>
 						</div>
 						<div class="w third">
 							<div id="live-timer" class="cw info border">
-								00:00
+								0'
 							</div>
 						</div>
 						<div class="w third">
-							<button class="button-style border" id="stop-button">End First Half</button>
+							<button class="button-style border" id="stop-button" onclick="toggleTickerRunning()">End First Half</button>
 						</div>
 					</div>
-					<div class="row of">
-						<div class="w two-ninth">
-							<select class="select-style border">
-								<option id="team-a-option" value="team-a">Team A</option>
-								<option id="team-b-option" value="team-b">Team B</option>
-							</select>
-						</div>
-						<div class="w third">
-							<select class="select-style border">
-								<option value="custom">Action</option>
-								<option value="yc">Yellow Card</option>
-								<option value="rc">Red Card</option>
-								<option value="yrc">Yellow/Red Card</option>
-								<option value="free">Free Kick</option>
-								<option value="penalty">Penalty Kick</option>
-								<option value="corner">Corner Kick</option>
-								<option value="sub">Substitution</option>
-								<option value="off">Offside</option>
-							</select>
-						</div>
-						<div class="w ninth">
-							<div class="combo">
-								<input class="border" type="number" name="player-number" id="player-number-input">
-								<ul class="border">
-									<li>1</li>
-									<li>3</li>
-									<li>5</li>
-									<li>6</li>
-									<li>7</li>
-								</ul>
+					<div class="row ticker-status" id="ticker-status-not-started">
+					This event hasn't started yet.
+					</div>
+					<div class="row ticker-status" id="ticker-status-finished">
+					This event is finished.
+					</div>
+					<div class="row ticker-status" id="ticker-status-pause">
+					This event is in the half time break.
+					</div>
+					<div class="row ticker-status" id="ticker-status-half-1">
+					This event is in the first half.
+					</div>
+					<div class="row ticker-status" id="ticker-status-half-1-overtime">
+					This event is in the first half's overtime.
+					</div>
+					<div class="row ticker-status" id="ticker-status-half-2">
+					This event is in the second half.
+					</div>
+					<div class="row ticker-status" id="ticker-status-half-2-overtime">
+					This event is in the second half's overtime.
+					</div>
+					<div class="row" id="event-post-div">
+						<div class="row of">
+							<div class="w two-ninth">
+								<select class="select-style border" id="team-select">
+									<option id="team-a-option" value="team-a">Team A</option>
+									<option id="team-b-option" value="team-b">Team B</option>
+								</select>
 							</div>
-						</div>
-						<div class="w third">
-							<div class="combo">
-								<input class="border" type="text" name="player-name" id="player-name-input">
-								<ul class="border">
-									<li>Thomas Müller</li>
-									<li>David Beckham</li>
-									<li>Wayne Rooney</li>
-									<li>Mesut Özil</li>
-									<li>Neymar</li>
-								</ul>
+							<div class="w third">
+								<select class="select-style border" id="action-select">
+									<option value="custom">Action</option>
+									<option value="goal">Goal</option>
+									<option value="yc">Yellow Card</option>
+									<option value="rc">Red Card</option>
+									<option value="yrc">Yellow/Red Card</option>
+									<option value="free">Free Kick</option>
+									<option value="penalty">Penalty Kick</option>
+									<option value="corner">Corner Kick</option>
+									<option value="sub">Substitution</option>
+									<option value="off">Offside</option>
+								</select>
 							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="w full">
-							<textarea class="border" rows="3" id="additional-info" placeholder="Additional information"></textarea>
-						</div>
-					</div>
-					<div class="row">
-						<div class="w third right">
-							<button class="button-style border" id="post-event">
-								Post Event
-							</button>
-						</div>
-					</div>
-					<div class="row">
-						<div class="w full">
-							<div class="border" id="event-list">
-								<div class="event-list-entry" id="event-list-noentries">
-									No Events posted
+							<div class="w ninth">
+								<div class="combo">
+									<input class="border" type="number" name="player-number" id="player-number-input">
+									<ul class="border" id="player-number-values"></ul>
 								</div>
+							</div>
+							<div class="w third">
+								<div class="combo">
+									<input class="border" type="text" name="player-name" id="player-name-input" maxlength="30">
+									<ul class="border" id="player-name-values"></ul>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="w full">
+								<textarea class="border" rows="3" maxlength="200" id="additional-info" placeholder="Additional information"></textarea>
+							</div>
+						</div>
+						<div class="row">
+							<div class="w third right">
+								<button class="button-style border" onclick="postEvent()" id="post-event">
+									Post Event
+								</button>
+							</div>
+						</div>
+					</div>
+					<!--This div displays all information about a match-->
+					<div class="row event-display">
+						<div class="row score-row">
+							<div class="w third teamname-a">Team A</div>
+							<div class="w ninth score score-a">0</div>
+							<div class="w ninth score">-</div>
+							<div class="w ninth score score-b">0</div>
+							<div class="w third teamname-b">Team B</div>
+						</div>
+						<div class="w full">
+							<div class="events-table">
+								<div class="events-row noevents-row">
+									<div class="events-row-entry almost-half event noevents noevents-a">
+										No events yet.
+									</div>
+									<div class="events-row-entry ninth timestamp noevents notimestamp">
+										-
+									</div>
+									<div class="events-row-entry almost-half event noevents noevents-a">
+										No events yet.
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row event-info">
+							<div class="w full text-right">
+								<span class="match-id-desc">Match ID: </span>
+								<span class="match-id">14</span>
 							</div>
 						</div>
 					</div>
