@@ -361,13 +361,13 @@ function update_manage_ticker(data) {
 
 	//very confusing if/else statements that show the correct event status div and enable the correct buttons
 	if(data["time"]["half"] == 0) {
-		$("#ticker-status-not-started").show();
+		$(".ticker-status-not-started").show();
 		start_button.html("Start First Half");
 		start_button.prop('disabled', false);
 	} else {
 		if(data["finished"] == 0) {
 			if(data["running"] == 0) {
-				$("#ticker-status-pause").show();
+				$(".ticker-status-pause").show();
 				start_button.html("Start Second Half");
 				start_button.prop('disabled', false);
 			} else {
@@ -375,24 +375,24 @@ function update_manage_ticker(data) {
 					stop_button.html("End First Half"); 
 
 					if(data["time"]["overtime"] == 0) {
-						$("#ticker-status-half-1").show();
+						$(".ticker-status-half-1").show();
 					} else {
-						$("#ticker-status-half-1-overtime").show();
+						$(".ticker-status-half-1-overtime").show();
 						stop_button.prop('disabled', false); //the half can only be stopped after it's finished
 					}
 				} else if(data["time"]["half"] == 2) {
 					stop_button.html("End Second Half");
 
 					if(data["time"]["overtime"] == 0) {
-						$("#ticker-status-half-2").show();
+						$(".ticker-status-half-2").show();
 					} else {
-						$("#ticker-status-half-2-overtime").show();
+						$(".ticker-status-half-2-overtime").show();
 						stop_button.prop('disabled', false); //the half can only be stopped after it's finished
 					}
 				}
 			}
 		} else {
-			$("#ticker-status-finished").show();
+			$(".ticker-status-finished").show();
 		}
 	}
 
