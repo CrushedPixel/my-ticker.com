@@ -55,7 +55,7 @@ body {
 	color: white;
 	margin: 3px;
 	padding: 5px;
-	font-size: 4vw;
+	font-size: 3.5vw;
 }
 
 .heading {
@@ -93,6 +93,10 @@ body {
 .cw {
 	text-align: center;
     color: white;
+}
+
+.center {
+	text-align: center;
 }
 
 .third {
